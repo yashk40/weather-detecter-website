@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Weather detector</title>
+</head>
+<body>
+    <div id="container">
+        <div id="search">
+             <button id="bt"> <i class="material-icons" style="color:white;">search</i></button>
+             <input type="text" placeholder="enter city name" id="text">
+        </div>
+        <div id="weather">
+            <img src="https://ssl.gstatic.com/onebox/weather/64/sunny.png" class="sunny">
+            <h1>24°C</h1>
+        </div>
+        <h2>Alwar</h2>
+        <div class="humidity">
+            <img id="icon3" src="https://cdn-icons-png.freepik.com/512/6501/6501013.png">
+        </div>
+        <p id="text1">64%</p>
+        <h6>Humidity</h6>
+        <div id="wind">
+            <img id="imgwind" src="https://cdn-icons-png.freepik.com/512/6354/6354693.png">
+            <p id="imgwind2">18km/h</p>
+            <h5 id="h5"> wind speed</h5>
+        </div>
+    </div>
+    <script>
+        const apikey = "d0cac8a8709c7ee89e57493820cf905e";
+        const apiurl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+         
+        const searchbox = document.querySelector("#text");
+        const searchbtn = document.querySelector("#bt");
+        const updimg = document.querySelector(".sunny");
+
+        async function checkWeather(city){
+            const response = await fetch(apiurl + city + `&appid=${apikey}`);
+            const data = await response.json();
+            console.log(data);
+
+            document.querySelector("h2").innerHTML = data.name ;
+            document.querySelector("h1").innerHTML = Math.round(data.main.temp)+ "°c";
+            document.querySelector("#text1").innerHTML = data.main.humidity + " %";
+            document.querySelector("#imgwind2").innerHTML = data.wind.speed + "km/h";
+
+            // Update weather icon based on weather condition
+            if(data.weather[0].description== "Rain"){
+                updimg.src = "https://ssl.gstatic.com/onebox/weather/64/rain_light.png";
+            } else if(data.weather[0].description == "Clear sky"){
+                updimg.src = "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
+            } else if(data.weather[0].description == "Clouds"){
+                updimg.src = "https://ssl.gstatic.com/onebox/weather/64/cloudy.png";
+            } else if(data.weather[0].description == "Drizzle"){
+                updimg.src = "https://cdn-icons-png.flaticon.com/512/4151/4151022.png";
+            } else if(data.weather[0].description == "Mist"){
+                updimg.src = "https://cdn1.iconfinder.com/data/icons/weather-forecast-meteorology-color-1/128/weather-foggy-sunny-512.png";
+            } else if(data.weather[0].description == "few clouds"){
+                updimg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Weather-few-clouds.svg/1200px-Weather-few-clouds.svg.png";
+            } else if(data.weather[0].description == "scattered clouds"){
+                updimg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Weather-few-clouds.svg/1200px-Weather-few-clouds.svg.png";
+             }  else if(data.weather[0].description == "haze"){
+              updimg.src = "https://cdn1.iconfinder.com/data/icons/weather-forecast-meteorology-color-1/128/weather-foggy-sunny-512.png";
+            }else if(data.weather[0].description == "broken clouds"){
+                updimg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Weather-few-clouds.svg/1200px-Weather-few-clouds.svg.png";
+            };
+        }
+        
+        searchbtn.addEventListener("click", () => {
+            checkWeather(searchbox.value);
+        });
+        
+        // Initial weather check
+        checkWeather("Alwar"); // Default city
+        console.log(data.weather[0].main)
+    </script>
+</body>
+</html>
